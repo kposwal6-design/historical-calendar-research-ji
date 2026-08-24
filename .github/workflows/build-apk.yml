@@ -32,11 +32,15 @@ jobs:
         run: |
           unzip -q HistoricalCalendar_ProductionCV_v3.zip -d extracted
           cp -R extracted/. .
-      - name: Fix JVM target
+      -       - name: Fix JVM target
         run: |
           find . -name "build.gradle" -o -name "build.gradle.kts" | while read f; do
             sed -i 's/jvmTarget *= *["'\'']1\.8["'\'']/jvmTarget = "17"/g' "$f"
             sed -i 's/JavaVersion\.VERSION_1_8/JavaVersion.VERSION_17/g' "$f"
+            sed -i 's/sourceCompatibility *= *1\.8/sourceCompatibility = JavaVersion.VERSION_17/g' "$f"
+            sed -i 's/targetCompatibility *= *1\.8/targetCompatibility = JavaVersion.VERSION_17/g' "$f"
+            sed -i 's/sourceCompatibility *= *["'\'']1\.8["'\'']/sourceCompatibility = JavaVersion.VERSION_17/g' "$f"
+            sed -i 's/targetCompatibility *= *["'\'']1\.8["'\'']/targetCompatibility = JavaVersion.VERSION_17/g' "$f"
           done
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4

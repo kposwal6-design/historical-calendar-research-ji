@@ -32,6 +32,9 @@ jobs:
         run: |
           unzip -q HistoricalCalendar_ProductionCV_v3.zip -d extracted
           cp -R extracted/. .
+      - name: Fix MainActivity
+        run: |
+          sed -i 's/Button(Modifier.fillMaxWidth(), onClick = { picker.launch("image\/\*") }) {/Button(onClick = { picker.launch("image\/*") }, modifier = Modifier.fillMaxWidth()) {/g' app/src/main/java/com/example/historicalcalendar/MainActivity.kt
       - name: Fix JVM target
         run: |
           find . -name "build.gradle" -o -name "build.gradle.kts" | while read f; do

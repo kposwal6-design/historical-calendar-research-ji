@@ -34,6 +34,28 @@ jobs:
           cp -R extracted/. .
       - name: Fix MainActivity
         run: |
+          python3 - <<'PY'
+          p="app/src/main/java/com/example/historicalcalendar/MainActivity.kt"
+          s=open(p).read()
+
+          s=s.replace(
+              'Button(Modifier.fillMaxWidth(), onClick = { picker.launch("image/*") }) {',
+              'Button(onClick = { picker.launch("image/*") }, modifier = Modifier.fillMaxWidth()) {'
+          )
+
+          s=s.replace(
+              '@Composable\nfun ProductionCvApp()',
+              '@OptIn(ExperimentalMaterial3Api::class)\n@Composable\nfun ProductionCvApp()'
+          )
+
+          if 'import androidx.compose.material3.ExperimentalMaterial3Api' not in s:
+              s=s.replace(
+                  'import androidx.compose.material3.*',
+                  'import androidx.compose.material3.*\nimport androidx.compose.material3.ExperimentalMaterial3Api'
+              )
+
+          open(p,"w").write(s)
+          PY
           sed -i 's/Button(Modifier.fillMaxWidth(), onClick = { picker.launch("image\/\*") }) {/Button(onClick = { picker.launch("image\/*") }, modifier = Modifier.fillMaxWidth()) {/g' app/src/main/java/com/example/historicalcalendar/MainActivity.kt
       - name: Fix JVM target
         run: |

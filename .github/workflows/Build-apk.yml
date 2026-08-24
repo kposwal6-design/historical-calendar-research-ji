@@ -25,13 +25,9 @@ jobs:
 
       - name: Accept Android licenses
         run: yes | sdkmanager --licenses || true
-
-      - name: Make Gradle executable
-        run: chmod +x gradlew
-
+      
       - name: Build Debug APK
-        run: ./gradlew :app:assembleDebug --no-daemon
-
+        run: gradle :app:assembleDebug --no-daemon
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
